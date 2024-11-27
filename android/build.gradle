@@ -1,3 +1,22 @@
+buildscript {
+    ext.kotlin_version = '1.8.22'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    // Don't apply the 'com.android.application' plugin here, Flutter applies it automatically.
+    // The following line is not necessary and should be removed or commented out.
+    // id 'com.android.application' version '8.0.0' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false  // Only use Kotlin plugin if necessary
+}
+
 allprojects {
     repositories {
         google()
@@ -5,12 +24,13 @@ allprojects {
     }
 }
 
-rootProject.buildDir = "../build"
+rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
-    project.evaluationDependsOn(":app")
+    project.evaluationDependsOn(':app')
 }
 
 tasks.register("clean", Delete) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:food_delivery/providers/cart_provider.dart';
+import 'package:food_delivery/services/payment_service.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final double total;
@@ -16,6 +17,20 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   String _selectedPaymentMethod = 'Cash';
+  bool _isProcessing = false;
+  List<String> _logs = [];
+
+  void _addLog(String log) {
+    setState(() {
+      _logs.add('${DateTime.now().toString().split('.')[0]} - $log');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    PaymentService.initPhonePe();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,38 +179,88 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ],
         ),
         child: ElevatedButton(
-          onPressed: () {
-            // Process payment and place order
-            context.read<CartProvider>().clearCart();
-            
-            // Show success dialog
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => AlertDialog(
-                title: const Text('Order Placed Successfully'),
-                content: const Text('Your order has been placed and will be delivered soon.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close dialog
-                      Navigator.of(context).pop(); // Close checkout screen
-                      Navigator.of(context).pop(); // Close cart screen
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          },
+          onPressed: _processPayment,
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(double.infinity, 48),
           ),
-          child: const Text(
-            'Place Order',
-            style: TextStyle(fontSize: 16),
-          ),
+          child: _isProcessing
+              ? const CircularProgressIndicator()
+              : const Text(
+                  'Place Order',
+                  style: TextStyle(fontSize: 16),
+                ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _processPayment() async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    _addLog('Initializing payment...');
+    
+    final String transactionId = 'TXN${DateTime.now().millisecondsSinceEpoch}';
+    final response = await PaymentService.startPayment(
+      amount: widget.total.toString(),
+      transactionId: transactionId,
+      callbackUrl: 'https://webhook.site/callback-url', // Replace with your callback URL
+    );
+
+    if (response != null) {
+      if (response['status'] == 'SUCCESS') {
+        _addLog('Payment successful!');
+        // Handle successful payment
+        context.read<CartProvider>().clearCart();
+        _showSuccessDialog();
+      } else {
+        _addLog('Payment failed: ${response['error']}');
+        _showErrorDialog(response['error'] ?? 'Payment failed');
+      }
+    } else {
+      _addLog('Payment initialization failed');
+      _showErrorDialog('Could not initialize payment');
+    }
+
+    setState(() {
+      _isProcessing = false;
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Payment Failed'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Order Placed Successfully'),
+        content: const Text('Your order has been placed and will be delivered soon.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close dialog
+              Navigator.of(context).pop(); // Close checkout screen
+              Navigator.of(context).pop(); // Close cart screen
+            },
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }

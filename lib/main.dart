@@ -6,8 +6,11 @@ import 'package:food_delivery/providers/cart_provider.dart';
 import 'package:food_delivery/screens/splash_screen.dart';
 import 'package:food_delivery/theme/app_theme.dart';
 import 'package:provider/provider.dart';
+import 'package:food_delivery/services/payment_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await PaymentService.initPhonePe();
   runApp(const MyApp());
 }
 

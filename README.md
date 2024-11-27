@@ -1,16 +1,10 @@
-# food_delivery
+ b# Food Delivery App - PhonePe Integration
 
-A new Flutter project.
+## Setup Required
+1. PhonePe Merchant Account
+2. Merchant ID
+3. Salt Key and Index
+4. App ID from PhonePe
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Dependencies
+Add to pubspec.yaml:
