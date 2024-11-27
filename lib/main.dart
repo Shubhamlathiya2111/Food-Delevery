@@ -3,6 +3,7 @@ import 'package:food_delivery/providers/auth_provider.dart';
 import 'package:food_delivery/providers/restaurant_provider.dart';
 import 'package:food_delivery/providers/category_provider.dart';
 import 'package:food_delivery/providers/cart_provider.dart';
+import 'package:food_delivery/providers/order_provider.dart';
 import 'package:food_delivery/screens/splash_screen.dart';
 import 'package:food_delivery/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: MaterialApp(
         title: 'Food Delivery App',
