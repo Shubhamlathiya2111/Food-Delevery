@@ -17,6 +17,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    @override
+ElevatedButtonThemeData elevatedButtonTheme() {
+  return ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.all(Colors.red), // Green background color
+      foregroundColor: MaterialStateProperty.all(Colors.white), // White text color
+      textStyle: MaterialStateProperty.all(
+        const TextStyle(
+          fontSize: 20, // Larger font size
+          fontWeight: FontWeight.bold, // Bold text
+        ),
+      ),
+      padding: MaterialStateProperty.all(
+        const EdgeInsets.symmetric(vertical: 16, horizontal: 32), // Padding for larger button size
+      ),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12), // Rounded corners
+        ),
+      ),
+    ),
+  );
+}
+
+
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -27,7 +54,10 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Food Delivery App',
-        theme: AppTheme.lightTheme,
+        theme: ThemeData(
+          appBarTheme: AppBarTheme.of(context),
+          elevatedButtonTheme: elevatedButtonTheme(),
+        ),
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,

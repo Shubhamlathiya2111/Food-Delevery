@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:food_delivery/providers/cart_provider.dart';
+import 'package:food_delivery/screens/cart/cart_screen.dart';
 import 'package:provider/provider.dart';
 
 class RestaurantDetailsScreen extends StatelessWidget {
@@ -76,6 +77,18 @@ class RestaurantDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
+          actions: [IconButton(
+                icon: const Icon(Icons.shopping_cart,color: Colors.white,),
+                onPressed: () {
+                  // Navigate to cart screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CartScreen(),
+                    ),
+                  );
+                },
+              ),],
           ),
           SliverToBoxAdapter(
             child: Column(
@@ -307,12 +320,14 @@ class RestaurantDetailsScreen extends StatelessWidget {
                                                     Provider.of<CartProvider>(context).isItemInCart(item['name'])
                                                         ? Icons.remove_shopping_cart
                                                         : Icons.add_shopping_cart,
+                                                        color: Colors.white,
                                                   ),
                                                   const SizedBox(width: 4),
                                                   Text(
                                                     Provider.of<CartProvider>(context).isItemInCart(item['name'])
                                                         ? 'Remove'
                                                         : 'Add to Cart',
+                                                        style: const TextStyle(color: Colors.white),
                                                   ),
                                                 ],
                                               ),

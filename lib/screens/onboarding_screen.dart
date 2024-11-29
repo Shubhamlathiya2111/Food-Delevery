@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/main.dart';
 import 'package:food_delivery/screens/auth/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -69,7 +70,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ElevatedButton(
+                    child: ElevatedButton(style: ButtonStyle(),
                       onPressed: () {
                         if (_currentPage == _onboardingData.length - 1) {
                           Navigator.pushReplacement(
